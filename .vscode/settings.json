@@ -1,0 +1,34 @@
+{
+    "commands.commands": [
+        {
+            "alignment": "left",
+            "priority": 0, // The priority of this item. Higher value means the item should be shown more to the left
+            "color": "#76c84a",
+            "text": "$(file) Open HTML File",
+            "filterFileRegex": ".*\\.html",
+            "tooltip": "Öffnet den standardbrowser undzeigt aktuelle HTML Datei an",
+            "command": "extension.liveServer.goOnline" // Command to execute
+        },
+        {
+            "alignment": "left",
+            "priority": 0,
+            "color": "#FFCC00",
+            "text": "$(run) Run JS File",
+            "filterFileRegex": ".*\\.js",
+            "tooltip": "Führt das aktuelle JavaScript File aus und zeigt den Output im Terminal an.",
+            "command": "extension.miramac.node.exec"
+        },
+        {
+            "alignment": "right",
+            "priority": 1000,
+            "text": "$(check) Setup erfolgreich",
+        }
+    ],
+    "commands.showKeybindings": false,
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#292B4C",
+        "titleBar.activeBackground": "#393C6B",
+        "titleBar.activeForeground": "#FCFCFD"
+    },
+    "github.copilot.editor.enableAutoCompletions": false
+}

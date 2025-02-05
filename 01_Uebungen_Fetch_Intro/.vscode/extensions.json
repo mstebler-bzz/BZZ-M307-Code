@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "trivadis.ngtvd-extensions",
+        "ritwickdey.LiveServer",
+        "miramac.vscode-exec-node",
+        "fabiospampinato.vscode-commands"
+    ]
+}
