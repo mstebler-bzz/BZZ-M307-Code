@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wettervorhersage</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 50px;
+        }
+
+        .weather-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .temperature {
+            font-size: 2em;
+            color: #e44d26;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="weather-container">
+        <h1>Wetter</h1>
+        <p class="temperature" id="temperature">Lade...</p>
+    </div>
+    <script>
+
+        /**
+         * Aufgabe 1:
+         * Die Funktion getCurrentWeatherAtLocation erhält die Längen- und Breitengrade eines Ortes
+         * und ruft die Wetterdaten für diesen Ort ab.
+         * 
+         * Nutzen Sie die fetch Funktion um die Wetterdaten von folgender URL abzurufen:
+         * https://api.open-meteo.com/v1/forecast?latitude=47.2361146&longitude=8.4284536&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m
+         * 
+         * Die URL ruft die Wetterdaten für Horgen ab.
+         * */
+        function getCurrentWeather() {
+            fetch(`https://api.open-meteo.com/v1/forecast?latitude=47.2361146&longitude=8.4284536&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m`)
+                .then(response => {
+                    // Konvertieren zu JSON
+                    return response.json()
+                }) 
+                .then(jsonData => {
+                    return processData(jsonData) // ruft die Funktion processData auf und übergibt die JSON-Daten
+                }); 
+        }
+
+        function processData(inputData) {
+            console.log(inputData);
+            const konvertierteDaten = {
+                temp: inputData.current.temperature_2m,
+                latitude: inputData.latitude,
+                longitude: inputData.longitude,
+            };
+
+            /**
+            * Aufgabe 2:
+            * Die Funktion erhält die Response des Servers als JSON-Objekt.
+            * In der obigen Variable konvertierteDaten ist das Resultat der Abfrage (Response) als JSON gespeichert.
+            * 
+            * Das JSON Objekt hat 3 Properties:
+            * - temp -> Temparatur in Grad Celsius
+            * - latitude -> Breitengrad
+            * - longitude -> Längengrad
+            * 
+            * Tipp: Benutze zu Testzwecken console.log(konvertierteDaten), um den Inhalt 
+            * der Variable konvertierteDaten anzuzeigen.
+            * 
+            * Die geladenen JSON Daten sollen nun in der HTML Seite angezeigt werden.
+            * Schreiben Sie entsprechenden HTMl Code, sodass die Temparatur auf der Website 
+            * innerhalb des DIVs mit der ID temperature angezeigt wird.
+            * 
+            * Tipp: Verwenden Sie document Selektoren aus dem Modul 288
+            * */
+
+            document.getElementById('temperature').innerText = konvertierteDaten.temp + "°C";
+            // oder
+            // document.querySelector('#temperature').innerText = konvertierteDaten.temp + "°C";
+
+        }
+
+        /**
+         * Aufgabe 3:
+         * Finden Sie die Längen und Breitengrade Ihres Zuhauses heraus und passen Sie die
+         * Url in der Funktion getCurrentWeather an.
+         * */
+
+
+         getCurrentWeather(); // Koordinaten für Horgen
+    </script>
+</body>
+
+</html>
