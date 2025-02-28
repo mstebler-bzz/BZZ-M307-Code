@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML & JavaScript Grundlagen</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
+        code { font-family: Consolas, monospace; }
+    </style>
+</head>
+<body>
+    <h1>JavaScript Grundlagen</h1>
+    
+    <h2>1. Datentypen</h2>
+    <p>JavaScript hat verschiedene Datentypen:</p>
+    <pre><code>// String
+let name = "Max";
+console.log(name); // Ausgabe: Max
+
+// Number
+let zahl = 42;
+console.log(zahl); // Ausgabe: 42
+
+// Boolean
+let istWahr = true;
+console.log(istWahr); // Ausgabe: true</code></pre>
+    
+    <h2>2. Funktionen und Parameter</h2>
+    <p>Funktionen helfen, Code wiederzuverwenden:</p>
+    <pre><code>function begruessung(name) {
+    return "Hallo, " + name + "!";
+}
+console.log(begruessung("Anna")); // Ausgabe: Hallo, Anna!</code></pre>
+    
+    <h2>3. Objekte</h2>
+    <p>Objekte speichern Daten in Schlüssel-Wert-Paaren:</p>
+    <pre><code>let person = {
+    vorname: "Lukas",
+    alter: 25
+};
+console.log(person.vorname, person.alter); // Ausgabe: Lukas 25</code></pre>
+    
+    <h2>4. Arrays</h2>
+    <p>Arrays speichern Listen von Werten:</p>
+    <pre><code>let farben = ["Rot", "Grün", "Blau"];
+console.log(farben[0]); // Ausgabe: Rot</code></pre>
+    
+    <h2>5. For-Schleifen</h2>
+    <p>Schleifen helfen, Code mehrfach auszuführen:</p>
+    <pre><code>for (let i = 0; i < farben.length; i++) {
+    console.log(farben[i]);
+}
+// Ausgabe:
+// Rot
+// Grün
+// Blau</code></pre>
+    
+    <h2>6. DOM-Manipulation</h2>
+    <p>Ändern und Interagieren mit der Webseite:</p>
+    
+    <h3>Element mit ID abrufen</h3>
+    <pre><code>// HTML
+&lt;h2 id="title"&gt;Alter Titel&lt;/h2&gt;
+
+// JavaScript
+let ueberschrift = document.getElementById("title");
+console.log(ueberschrift.textContent); // Ausgabe: Alter Titel</code></pre>
+    
+    <h3>Textinhalt setzen</h3>
+    <pre><code>// HTML
+&lt;p id="text"&gt;Alter Text&lt;/p&gt;
+
+// JavaScript
+let textElement = document.getElementById("text");
+textElement.textContent = "Neuer Text";
+console.log(textElement.textContent); // Ausgabe: Neuer Text</code></pre>
+    
+    <h3>Mit querySelector</h3>
+    <pre><code>// HTML
+&lt;div class="container"&gt;Originaler Inhalt&lt;/div&gt;
+
+// JavaScript
+let container = document.querySelector(".container");
+console.log(container.textContent); // Ausgabe: Originaler Inhalt</code></pre>
+    
+    <h3>Click-Event hinzufügen</h3>
+    <pre><code>// HTML
+&lt;button id="alertButton"&gt;Klick mich&lt;/button&gt;
+
+// JavaScript
+let alertButton = document.getElementById("alertButton");
+alertButton.addEventListener("click", function() {
+    alert("Button wurde geklickt!");
+});</code></pre>
+    
+    <h3>Interaktive Demo:</h3>
+    <h2 id="title">Alter Titel</h2>
+    <button id="changeTitle">Klick mich</button>
+    <p id="text">Alter Text</p>
+    <div class="container">Originaler Inhalt</div>
+    <button id="alertButton">Klick mich</button>
+    
+    <script>
+        document.getElementById("changeTitle").addEventListener("click", function() {
+            document.getElementById("title").textContent = "Titel wurde geändert!";
+        });
+        
+        document.getElementById("alertButton").addEventListener("click", function() {
+            alert("Button wurde geklickt!");
+        });
+    </script>
+</body>
+</html>
