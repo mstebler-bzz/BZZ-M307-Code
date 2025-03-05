@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formular zur Datenübermittlung</title>
+</head>
+
+<body>
+
+    <h2>Datenübermittlung</h2>
+
+    <form id="dataForm" onsubmit="submitForm(event)">
+
+        <!-- 
+            Aufgabe:
+            Erstellen der Felder vorname und rating 
+            Das Feld Rating soll eine Zahl zwischen 1 und 5 sein.
+            Alle Felder sind Pflichtfelder.
+        -->
+
+        <button type="submit">Daten senden</button>
+    </form>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault(); // don't touch 
+
+            /**
+             * Mithilfe der createJsObjectFromHtmlForm() können Daten als JavaScript Object 
+             * aus dem Formular ausgelesen werden.
+             * */
+            const data = createJsObjectFromHtmlForm(event.target);
+
+            /**
+             * Die Daten werden als JSON String an den Server gesendet.
+             * */
+
+            /**
+             * Daten sollen als POST Request an den Server mit folgender 
+             * URL ≈ gesendet werden.
+             * 
+             * Anschliessend soll ein Alert mit dem Text "Daten erfolgreich gesendet" angezeigt werden.
+             * 
+             * Beim Auftreten eines Fehlers soll ein Alert mit dem Text 
+             * "Ein Fehler beim Senden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut." angezeigt werden.
+             * */
+
+        }
+
+        function createJsObjectFromHtmlForm(form) {
+            const formData = new FormData(event.target);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                if (value === 'on') {
+                    value = true;
+                }
+                if (value === 'off') {
+                    value = false;
+                }
+                data[key] = value;
+            }
+            return data;
+        }
+    </script>
+</body>
+
+</html>

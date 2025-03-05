@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formular zur Datenübermittlung</title>
+</head>
+
+<body>
+
+    <h2>Datenübermittlung</h2>
+    <form id="dataForm" onsubmit="submitForm(event)">
+
+        <label for="vorname">Vorname:</label>
+        <!-- text input -->
+
+
+        <br><br>
+
+        <label for="rating">Rating:</label>
+        <!-- number input -->
+
+        <br><br>
+
+
+        <label for="pw">Dein Passwort:</label>
+        <!-- password input -->
+
+        <br><br>
+
+
+        <label for="email">Email:</label>
+        <!-- email input -->
+
+        <br><br>
+
+
+        <label for="geburtstag">Geburtsdatum:</label>
+        <!-- date input -->
+
+        <br><br>
+
+
+        <label for="aktiv">Ist Aktiv:</label>
+        <!-- checkbox input -->
+
+        <br><br>
+
+
+        <label for="rolle">Rolle:</label>
+        <!-- select input -> Typen Admin und User -->
+
+        <br><br>
+
+
+        <label for="schule">Schule:</label>
+        <!-- radio input -> Typen Gymi und Sek -->
+
+        <br><br>
+
+
+        <button type="submit">Daten senden</button>
+    </form>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+
+            // Form Daten aufbereiten mit Hilfsfunktion und Ausgabe auf Konsole --> sichtbar in Browser Dev Tools --> Funktion createJsObjectFromHtmlForm aufrufen
+        }
+
+        function createJsObjectFromHtmlForm(form) {
+            const formData = new FormData(event.target);
+            const data = {};
+
+            for (let [key, value] of formData.entries()) {
+                // bei input type checkbox ist der value "on", falls die Checkbox angeklickt wurde
+                if (value === 'on') {
+                    value = true;
+                }
+                data[key] = value;
+            }
+            return data;
+        }
+    </script>
+</body>
+
+</html>
