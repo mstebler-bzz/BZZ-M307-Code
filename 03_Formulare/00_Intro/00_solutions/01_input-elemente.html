@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formular zur Datenübermittlung</title>
+    <style>
+        fieldset {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Datenübermittlung</h2>
+    <form id="dataForm" onsubmit="submitForm(event)">
+        <label for="vorname">Vorname:</label>
+        <!-- text input -->
+        <input type="text" name="vorname" id="vorname" required><br><br>
+
+        <label for="rating">Rating:</label>
+        <!-- number input -->
+        <input type="number" name="rating" min="1" max="5" id="rating" required><br><br>
+
+        <label for="pw">Dein Passwort:</label>
+        <!-- password input -->
+        <input type="password" name="password" id="pw" required><br><br>
+
+        <label for="email">Email:</label>
+        <!-- email input -->
+        <input type="email" name="email" id="email" required><br><br>
+
+        <label for="geburtstag">Geburtsdatum:</label>
+        <!-- date input -->
+        <input type="date" name="geburtstag" id="geburtstag" required><br><br>
+
+        <label for="aktiv">Ist Aktiv:</label>
+        <!-- checkbox input -->
+        <input type="checkbox" name="aktiv" id="aktiv"><br><br>
+
+        <label for="rolle">Rolle:</label>
+        <!-- select input -> Typen Admin und User -->
+        <select name="rolle" id="rolle">
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+        </select><br><br>
+
+        <fieldset>
+            <legend>Schule:</legend>
+            <!-- radio input -> Typen Gymi und Sek -->
+            <input type="radio" name="schule" value="gymi" id="gymi"> <label for="gymi">Gymi</label>
+            <input type="radio" name="schule" value="sek" id="sek"> <label for="sek">Sek</label>
+        </fieldset>
+        <br><br>
+
+        <button type="submit">Daten senden</button>
+    </form>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault(); // Wir überschreiben das Standard-Verhalten des Formulars (Seite neuladen)
+
+            // Form Daten aufbereiten mit Hilfsfunktion
+            const data = createJsObjectFromHtmlForm(event.target);
+
+            console.log(data);
+        }
+
+        function createJsObjectFromHtmlForm(form) {
+            const formData = new FormData(event.target);
+            const data = {};
+
+            for (let [key, value] of formData.entries()) {
+                // bei input type checkbox ist der value "on", falls die Checkbox angeklickt wurde
+                if (value === 'on') {
+                    value = true;
+                }
+                data[key] = value;
+            }
+            return data;
+        }
+    </script>
+</body>
+
+</html>

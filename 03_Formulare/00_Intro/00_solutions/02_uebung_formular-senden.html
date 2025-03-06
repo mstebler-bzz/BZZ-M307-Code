@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formular zur Datenübermittlung</title>
+</head>
+
+<body>
+
+    <h2>Datenübermittlung</h2>
+
+    <form id="dataForm" onsubmit="submitForm(event)">
+
+        <!-- 
+            Aufgabe:
+            Erstellen der Felder vorname und rating 
+            Das Feld Rating soll eine Zahl zwischen 1 und 5 sein.
+            Alle Felder sind Pflichtfelder.
+        -->
+        <label for="vorname">Vorname:</label>
+        <input type="text" name="vorname" id="vorname" required><br><br>
+
+        <label for="rating">Rating:</label>
+        <input type="number" name="rating" min="1" max="5" id="rating" required><br><br>
+
+        <button type="submit">Daten senden</button>
+    </form>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault(); // Wir überschreiben das Standard-Verhalten des Formulars (Seite neuladen)
+
+            /**
+             * Mithilfe der createJsObjectFromHtmlForm() können Daten als JavaScript Object 
+             * aus dem Formular ausgelesen werden.
+             * */
+            const data = createJsObjectFromHtmlForm(event.target);
+
+            /**
+             * Die Daten werden als JSON String an den Server gesendet.
+             * */
+            const jsonBody = JSON.stringify(data);
+
+            /**
+             * Daten sollen als POST Request an den Server mit folgender 
+             * URL https://pb-stma.toiwxr.easypanel.host/api/collections/00_intro_formular/records gesendet werden.
+             * 
+             * Anschliessend soll ein Alert mit dem Text "Daten erfolgreich gesendet" angezeigt werden.
+             * 
+             * Beim Auftreten eines Fehlers soll ein Alert mit dem Text 
+             * "Ein Fehler beim Senden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut." angezeigt werden.
+             * */
+            fetch('≈', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: jsonBody
+            })
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => {
+                    alert('Daten erfolgreich gesendet');
+                })
+                .catch((error) => {
+                    alert('Ein Fehler beim Senden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.')
+                    console.error('Error:', error);
+                });
+        }
+
+        function createJsObjectFromHtmlForm(form) {
+            const formData = new FormData(event.target);
+            const data = {};
+
+            for (let [key, value] of formData.entries()) {
+                // bei input type checkbox ist der value "on", falls die Checkbox angeklickt wurde
+                if (value === 'on') {
+                    value = true;
+                }
+                if (value === 'off') {
+                    value = false;
+                }
+                data[key] = value;
+            }
+            return data;
+        }
+    </script>
+</body>
+
+</html>

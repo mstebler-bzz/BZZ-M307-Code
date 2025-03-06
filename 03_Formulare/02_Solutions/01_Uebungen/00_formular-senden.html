@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formular zur Datenübermittlung</title>
+</head>
+
+<body>
+
+    <h2>Datenübermittlung</h2>
+    <form id="dataForm" onsubmit="submitForm(event)">
+
+        <!-- 
+            Aufgabe 1: 
+            Erstellen Sie die folgenden Felder (der Name muss exakt übernommen werden):
+            - vorname: text input
+            - nachname: text input
+            - email: email input
+            - geburtstag: date input
+            - aktiv: checkbox input
+            - rolle: select input -> Typen Admin und User sollen auswählbar sein
+         -->
+        <label for="vorname">Vorname:</label>
+        <input type="text" name="vorname" id="vorname" required><br><br>
+
+        <label for="nachname">Nachname:</label>
+        <input type="text" name="nachname" id="nachname" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" required><br><br>
+
+        <label for="geburtstag">Geburtsdatum:</label>
+        <input type="date" name="geburtstag" id="geburtstag" required><br><br>
+
+        <label for="aktiv">Ist Aktiv:</label>
+        <input type="checkbox" name="aktiv" id="aktiv"><br><br>
+
+        <label for="rolle">Rolle:</label>
+        <select name="rolle" id="rolle">
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+        </select><br><br>
+
+        <button type="submit">Daten senden</button>
+    </form>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+
+            /**
+             * Mithilfe der createJsObjectFromHtmlForm() können Daten als JavaScript Object 
+             * aus dem Formular ausgelesen werden.
+             * */
+            const data = createJsObjectFromHtmlForm(event);
+            console.log(data); // in der Konsole sieht man wie das JavaScript Object aussieht sobald man auf "Daten Senden" klickt.
+
+            /**
+             * Aufgabe 2:
+             * Die Daten werden als JSON String an den Server gesendet.
+             * Schreibe Code, welchen das JavaScript Object der Konstante "data" in einen JSON String umwandelt.
+             * */
+            const jsonBody = JSON.stringify(data);
+
+            /**
+             * Aufgabe 3:
+             * - Daten sollen als POST Request an den Server mit folgender 
+             *   URL https://pb-stma.toiwxr.easypanel.host/api/collections/formular_test/records gesendet werden.
+             * - Die zuvor konvertierten JSON Daten sollen als Body des Requests gesendet werden.
+             * - Anschliessend soll ein Alert mit dem Text "Daten erfolgreich gesendet" angezeigt werden.
+             * - Beim Auftreten eines Fehlers soll ein Alert mit dem Text 
+             *   "Ein Fehler beim Senden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut." angezeigt werden.
+             * */
+            fetch('https://pb-stma.toiwxr.easypanel.host/api/collections/formular_test/records', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: jsonBody
+            })
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => {
+                    alert('Daten erfolgreich gesendet');
+                })
+                .catch((error) => {
+                    alert('Ein Fehler beim Senden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.')
+                    console.error('Error:', error);
+                });
+
+            /**
+             * Aufgabe 4:
+             * 
+             * Testen Sie das Formular und füllen Sie es mit beliebigen Daten aus und senden es ab.
+             * Sie können bei der Lehrperson nachfragen, ob die Daten erfolgreich gesendet und in der REST API gespeichert wurden.
+             * */
+        }
+
+        function createJsObjectFromHtmlForm(form) {
+            const formData = new FormData(event.target);
+            const data = {};
+
+            for (let [key, value] of formData.entries()) {
+                if (value === 'on') {
+                    value = true;
+                }
+                data[key] = value;
+            }
+            return data;
+        }
+    </script>
+</body>
+
+</html>
