@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Data from REST API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Data from REST API</h1>
+        <div id="dataList">
+            <p class="loading">Loading...</p>
+        </div>
+    </div>
+
+    <script>
+
+        /**
+         * Aufgabenbeschreibung:
+         * 
+         * Ziel dieser Aufgabe ist es, dass Sie die in der letzten Aufgabe gesendeten Daten von der 
+         * REST API wieder abrufen und anzeigen.
+         * */
+
+        function fetchData() {
+            /**
+             * Aufgabe 1:
+             * Die Funktion fetchData soll die Daten von der REST API mittels GET-Request von folgeder URL abrufen: 
+             * https://pb-stma.toiwxr.easypanel.host/api/collections/formular_test/records
+             * 
+             * Sobald der Server eine Antwort gesendet hat, soll die Funktion displayData mit den geladenen Daten aufgerufen werden.
+             * Bei einem Fehler soll eine Fehlermeldung als alert angezeigt werden (stichwort "catch").
+             * */
+            fetch('https://pb-stma.toiwxr.easypanel.host/api/collections/formular_test/records')
+                .then(response => response.json())
+                .then(data => displayData(data))
+                .catch((error) => {
+                    alert('Ein Fehler beim Senden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.');
+                    console.error('Error:', error);
+                });
+        }
+
+        function displayData(data) {
+            const items = data.items;
+
+            /**
+             * Aufgabe 2:
+             * Die Funktion displayData erhält die Daten als Parameter. 
+             * Die Variable "items" enthält eine Liste alles in der API gespeicherten Datensätze.
+             * Ein Datensatz hat folgende Struktur (dieselbe wie bei Aufgabe 1):
+             * - id: number
+               - vorname: string
+               - nachname: string
+               - email: string
+               - geburtstag: date
+               - aktiv: boolean
+               - rolle: string
+             *
+             * Die Daten sollen in einer Liste innerhalb des divs mit der id "dataList" angezeigt werden.
+             * - Erstellen Sie eine Liste (<ul>) und fügen Sie für jedes Element in der Liste ein <li> hinzu.
+             * - Jedes <li> soll die Daten vorname, nachname und geburtstag eiens Datensatzes enthalten
+             * 
+             * Hinweis: Verwende HTML Selektoren und for-Schleifen aus dem Modul 208
+             * */
+            const dataList = document.getElementById('dataList');
+            dataList.innerHTML = '';
+
+            let innerHtml = '<ul>';
+            for (let item of items) {
+                innerHtml += `<li>Vorname: ${item.vorname}, Email: ${item.email}, Geburtsdatum: ${item.geburtstag}</li>`;
+            }
+            innerHtml += '</ul>';
+            dataList.innerHTML = innerHtml;
+        }
+
+
+        /**
+         * Aufgabe 3:
+         * 
+         * Die REST API bietet die Möglichkeit Daten zu filtern.
+         * Dazu müssen lediglich queryParameter an die URL angehängt werden (in 2. Woche behandelt).
+         * 
+         * Ein Beispiel wäre wie folgt, wenn nach allen Datensätzen mit dem Vornamen "Max" gefiltert werden soll.
+         * https://pb-stma.toiwxr.easypanel.host/api/collections/formular_test/records
+         * 
+         * Bei der URL wurde lediglich ?filter=(vorname='Max') angehängt.
+         * 
+         * Ihre Aufgabe ist es nun, die URL im fetch() so zu verändern, sodass der Datensatz geladen wird, 
+         * welchen Sie in der vorherigen Aufgabe werstellt haben.
+         * 
+         * */
+
+        fetchData();
+    </script>
+
+</body>
+
+</html>
