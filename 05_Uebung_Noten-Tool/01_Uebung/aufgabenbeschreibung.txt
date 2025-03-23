@@ -1,0 +1,19 @@
+Ziel: Eine Webapplikation zu erstellen, in welcher Noten erfasst und angezeigt
+werden können.
+
+Sie erstellen 2 HTML-Seiten:
+- auf der ersten HTML-Seite ist eine Übersicht aller Noten sowie der Notenschnitt aller Noten ersichtlich
+- auf der zweiten HTML-Seite können neue Noten hinzugefügt werden
+
+Die Noten werden in Pocketbase gespeichert:
+- jede Person hat eine eigene Noten Collection, Benennung: Noten_VORNAME
+- die Collection in Pocketbase muss mindestens die Spalten „Note“ und „Fach“ enthalten, Sie können optional weitere Spalten ergänzen
+- benutzen Sie Ihre Pocketbase-URL aus der letzten Woche
+
+Fügen Sie Ihrer Website CSS hinzu, damit sie ansprechend aussieht
+Nutzen Sie die Übungen aus den letzten Wochen, um die Aufgabe zu lösen
+
+Vorgehen:
+1. Beginnen Sie entweder mit der Notenübersicht oder mit dem Formular
+2. Überlegen Sie sich, welche Bausteine Sie zum Lösen benötigen (Formularelemente, GET-Request, ...)
+3. Fragen Sie nach, wenn Sie nicht weiterkommen
