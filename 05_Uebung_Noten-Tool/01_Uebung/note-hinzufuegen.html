@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note hinzufügen</title>
+</head>
+
+<body>
+
+    <h1>Note hinzufügen</h1>
+    <!-- Hier kommt der HTML Code für's Formular (wie in den vergangenen Übungen 03, Sie benötigen die Feler Note und Fach) -->
+
+    <script>
+
+        // Hier kommt der JavaScript Code, der die Formulardaten speichert.
+        // Benutzen Sie die Hilfsmethode createJsObjectFromHtmlForm wie schon in 03_Formulare/00_Intro/02_uebung_formular-senden.html
+
+        
+        /**
+         * Hilfsmethode, um Daten aus Formular auszulesen.
+         * */
+        function createJsObjectFromHtmlForm(form) {
+            const formData = new FormData(event.target);
+            const data = {};
+
+            for (let [key, value] of formData.entries()) {
+                if (value === 'on') {
+                    value = true;
+                }
+                if (value === 'off') {
+                    value = false;
+                }
+                data[key] = value;
+            }
+            return data;
+        }
+    </script>
+
+</body>
+
+</html>
