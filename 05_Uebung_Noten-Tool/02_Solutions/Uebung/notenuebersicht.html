@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notenübersicht</title>
+</head>
+
+<body>
+
+    <h1>Notenübersicht</h1>
+    <p>Notenschnitt
+        <span id="schnitt">
+            <!-- Hier kommt der Notenschnitt rein -->
+        </span>
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <th>Note</th>
+                <th>Fach</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <!-- Hier kommen die Noten rein -->
+        </tbody>
+    </table>
+
+    <br>
+    <a href="note-hinzufuegen.html">Note hinzufügen</a>
+
+    <script>
+        function fetchData() {
+            fetch("https://pb-stma.toiwxr.easypanel.host/api/collections/Noten_Martin/records")
+                // warten auf die Antwort des Servers
+                .then(response => { 
+                    // dann prüfen, ob der Request erfolgreich ist (2XX Statuscode)
+                    if (response.ok) {
+                        // wir erhalten eine JSON-Antwort, das heisst wir wandeln zu JSON UM --> response.json()
+                        return response.json();
+                    } else {
+                        // Fehler werfen
+                        throw new Error('Fehler beim Request');
+                    }
+                })
+                // warten bis die Umwandlung fertig ist
+                .then(data => {
+                    // dann die Daten in die Browser-Konsole ausgeben
+                    console.log(data); 
+                    displayData(data);
+                    calculateAndDisplaySchnitt(data);
+                })
+                // FALLS ein Fehler auftritt bei den oberen Schritten
+                .catch(err => { 
+                    // Fehler auf die Browser-Konsole ausgeben
+                    alert('Ein Fehler beim laden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.');
+                    console.log(err); 
+                });
+        }
+
+        function displayData(data) {
+            const items = data.items;
+
+            const tableBodyElement = document.getElementById('tableBody');
+            tableBodyElement.innerHTML = '';
+
+            let innerHtml = '';
+            for (let item of items) {
+                innerHtml += `<tr><td>${item.note}</td><td>${item.fach}</td></tr>`;
+            }
+            tableBodyElement.innerHTML = innerHtml;
+        }
+
+        function calculateAndDisplaySchnitt(data) {
+            const items = data.items;
+            let sum = 0;
+            for (let item of items) {
+                sum += parseInt(item.note);
+            }
+
+            const schnitt = sum / items.length;
+            document.getElementById('schnitt').innerText = schnitt;
+        }
+
+        fetchData();
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note hinzufüegen</title>
+</head>
+
+<body>
+
+    <h1>Note hinzufügen</h1>
+    <form id="dataForm" onsubmit="submitForm(event)">
+        <label for="note">Note:</label>
+        <input type="number" name="note" id="note" min="1.0" max="6.0" step=".01" required><br><br>
+
+        <label for="fach">Fach:</label>
+        <input type="text" name="fach" id="fach" required><br><br>
+
+        <button type="submit">Note Speichern</button>
+    </form>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+
+            /**
+             * Mithilfe der createJsObjectFromHtmlForm() können Daten als JavaScript Object 
+             * aus dem Formular ausgelesen werden.
+             * */
+            const data = createJsObjectFromHtmlForm(event);
+            console.log(data); // in der Konsole sieht man wie das JavaScript Object aussieht sobald man auf "Daten Senden" klickt.
+
+            /**
+             * Die Daten werden als JSON String an den Server gesendet.
+             * Schreibe Code, welchen das JavaScript Object der Konstante "data" in einen JSON String umwandelt.
+             * */
+            const jsonBody = JSON.stringify(data);
+
+            /**
+             * - Formulardaten sollen an die REST API gesendet werden.
+             * - Die zuvor konvertierten JSON Daten sollen als Body des Requests gesendet werden.
+             * - Anschliessend soll ein Alert mit dem Text "Daten erfolgreich gesendet" angezeigt werden. 
+             *   Der Benutzer wird direkt zur Seite "notenuebersicht.html" weitergeleitet.
+             * - Beim Auftreten eines Fehlers soll ein Alert mit dem Text 
+             *   "Ein Fehler beim Senden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut." angezeigt werden.
+             * */
+            fetch("https://pb-stma.toiwxr.easypanel.host/api/collections/Noten_Martin/records", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: jsonBody
+            })
+                // warten auf die Antwort des Servers
+                .then(response => { 
+                    // dann prüfen, ob der Request erfolgreich ist (2XX Statuscode)
+                    if (response.ok) {
+                        // wir erhalten eine JSON-Antwort, das heisst wir wandeln zu JSON UM --> response.json()
+                        return response.json();
+                    } else {
+                        // Fehler werfen
+                        throw new Error('Fehler beim Request');
+                    }
+                })
+                // warten bis die Umwandlung fertig ist
+                .then(data => {
+                    // dann die Daten in die Browser-Konsole ausgeben
+                    console.log(data); 
+                    alert('Daten erfolgreich gesendet');
+                    window.location.href = 'notenuebersicht.html';
+                })
+                // FALLS ein Fehler auftritt bei den oberen Schritten
+                .catch(err => { 
+                    // Fehler auf die Browser-Konsole ausgeben
+                    alert('Ein Fehler beim laden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.');
+                    console.log(err); 
+                });
+        }
+
+        function createJsObjectFromHtmlForm(form) {
+            const formData = new FormData(event.target);
+            const data = {};
+
+            for (let [key, value] of formData.entries()) {
+                if (value === 'on') {
+                    value = true;
+                }
+                if (value === 'off') {
+                    value = false;
+                }
+                data[key] = value;
+            }
+            return data;
+        }
+    </script>
+
+</body>
+
+</html>
