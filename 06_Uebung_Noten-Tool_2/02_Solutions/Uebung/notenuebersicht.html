@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notenübersicht</title>
+</head>
+
+<body>
+
+    <h1>Notenübersicht</h1>
+    <p>Notenschnitt
+        <span id="schnitt">
+            <!-- Hier kommt der Notenschnitt rein -->
+        </span>
+    </p>
+    <table>
+        <thead>
+            <tr>
+                <th>Note</th>
+                <th>Fach</th>
+                <th>Löschen</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            <!-- Hier kommen die Noten rein -->
+        </tbody>
+    </table>
+
+    <br>
+    <a href="note-hinzufuegen.html">Note hinzufügen</a>
+
+    <script>
+        function fetchData() {
+            fetch('https://pb-stma.toiwxr.easypanel.host/api/collections/Noten_Martin/records', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    displayData(data);
+                    calculateAndDisplaySchnitt(data);
+                })
+                .catch((error) => {
+                    alert('Ein Fehler beim laden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.');
+                    console.error('Error:', error);
+                });
+        }
+
+        function displayData(data) {
+            const items = data.items;
+
+            const tableBodyElement = document.getElementById('tableBody');
+            tableBodyElement.innerHTML = '';
+
+            let innerHtml = '';
+            for (let item of items) {
+                innerHtml += `<tr><td>${item.note}</td><td>${item.fach}</td><td onclick="loeschen('${item.id}')">löschen</td></tr>`;
+            }
+            tableBodyElement.innerHTML = innerHtml;
+        }
+
+        function loeschen(itemId) {
+            fetch('https://pb-stma.toiwxr.easypanel.host/api/collections/Noten_Martin/records/' + itemId, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(data => {
+                    alert('Item wurde erfolgreich gelöscht.');
+                    fetchData(data);
+                })
+                .catch((error) => {
+                    alert('Ein Fehler beim laden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.');
+                    console.error('Error:', error);
+                });
+        }
+
+        function calculateAndDisplaySchnitt(data) {
+            const items = data.items;
+            let sum = 0;
+            for (let item of items) {
+                sum += parseInt(item.note);
+            }
+
+            const schnitt = sum / items.length;
+            document.getElementById('schnitt').innerText = schnitt;
+        }
+
+        fetchData();
+
+    </script>
+
+</body>
+
+</html>
