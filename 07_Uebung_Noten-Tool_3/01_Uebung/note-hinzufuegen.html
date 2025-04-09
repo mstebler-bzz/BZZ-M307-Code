@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note editieren</title>
+</head>
+
+<body>
+
+    <h1>Note editieren</h1>
+    <form id="dataForm" onsubmit="submitForm(event)">
+        <label for="note">Note:</label>
+        <input type="number" name="note" id="note" min="1.0" max="6.0" step=".01" required><br><br>
+
+        <label for="fach">Fach:</label>
+        <input type="text" name="fach" id="fach" required><br><br>
+
+        <button type="submit">Note Speichern</button>
+    </form>
+
+    <script>
+
+        let existingNote = null;
+
+        function loadExistingDataFromPocketbase(existingNoteId) {
+            /**
+             * Aufgabe 1:
+             * Schreibe Code, welcher die Daten einer bestehenden Note anhand der existingNoteId aus Pocketbase lädt.
+             * Sobald der eine Datensatz geladen wurde, soll die Funktion "insertExistingDataIntoForm()" aufgerufen werden.
+             * */
+            fetch('https://pb-stma.toiwxr.easypanel.host/api/collections/Noten_Martin/records/' + existingNoteId, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    insertExistingDataIntoForm(data);
+                })
+                .catch((error) => {
+                    alert('Ein Fehler beim laden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.');
+                    console.error('Error:', error);
+                });
+        }
+
+        function insertExistingDataIntoForm(data) {
+            existingNote = data;
+            /**
+             * Aufgabe 2:
+             * Schreibe Code, welcher die Daten der bestehenden Note in das Formular einfügt.
+             * Im Feld "note" soll die Note eingetragen werden und im Feld "fach" das Fach.
+             * */
+            const form = document.getElementById('dataForm');
+            form.note.value = data.note;
+            form.fach.value = data.fach;
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+
+            /**
+             * Mithilfe der createJsObjectFromHtmlForm() können Daten als JavaScript Object 
+             * aus dem Formular ausgelesen werden.
+             * */
+            const data = createJsObjectFromHtmlForm(event);
+            console.log(data); // in der Konsole sieht man wie das JavaScript Object aussieht sobald man auf "Daten Senden" klickt.
+
+            /**
+             * Die Daten werden als JSON String an den Server gesendet.
+             * Schreibe Code, welchen das JavaScript Object der Konstante "data" in einen JSON String umwandelt.
+             * */
+            const jsonBody = JSON.stringify(data);
+
+            if (existingNote) {
+                /**
+                 * Aufgabe 3:
+                 * Schreibe Code, welcher die Daten der bestehenden Note aktualisiert.
+                 * Sobald die Daten erfolgreich aktualisiert wurden, soll der Benutzer auf die "notenuebersicht.html" Seite weitergeleitet werden.
+                 * 
+                 * Hinweis: Bei der Url muss die ID des bestehenden Datensatzes am ende angegeben werden. -> /records/ID
+                 * Hinweis: Um einen Datensatz zu aktualisieren, muss die Methode "PATCH" verwendet werden.
+                 * */
+                fetch('https://pb-stma.toiwxr.easypanel.host/api/collections/Noten_Martin/records/' + existingNote.id, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: jsonBody
+                })
+                    .then(data => {
+                        alert('Daten erfolgreich aktualisiert');
+                        window.location.href = 'notenuebersicht.html';
+                    })
+                    .catch((error) => {
+                        alert('Ein Fehler beim senden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.')
+                        console.error('Error:', error);
+                    });
+            } else {
+                fetch('https://pb-stma.toiwxr.easypanel.host/api/collections/Noten_Martin/records', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: jsonBody
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert('Daten erfolgreich gesendet');
+                        window.location.href = 'notenuebersicht.html';
+                    })
+                    .catch((error) => {
+                        alert('Ein Fehler beim senden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.')
+                        console.error('Error:', error);
+                    });
+            }
+        }
+
+        function createJsObjectFromHtmlForm(form) {
+            const formData = new FormData(event.target);
+            const data = {};
+
+            for (let [key, value] of formData.entries()) {
+                if (value === 'on') {
+                    value = true;
+                }
+                if (value === 'off') {
+                    value = false;
+                }
+                data[key] = value;
+            }
+            return data;
+        }
+
+
+        /**
+         * Dieser Code liest die URL aus und extrahiert den Query-Parameter "noteId".
+         * Wenn in der URL der Query Parameter angegeben wurde, wird die Funktion "loadExistingDataFromPocketbase()" aufgerufen.
+         * */
+        const url = window.location.href;
+        const queryParams = new URLSearchParams(url);
+        const existingNoteId = Array.from(queryParams.values()).find(x => !!x);
+        if (existingNoteId) {
+            loadExistingDataFromPocketbase(existingNoteId);
+        }
+    </script>
+
+</body>
+
+</html>
