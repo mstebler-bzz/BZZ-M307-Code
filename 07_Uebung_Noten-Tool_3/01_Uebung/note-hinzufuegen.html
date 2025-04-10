@@ -30,21 +30,7 @@
              * Schreibe Code, welcher die Daten einer bestehenden Note anhand der existingNoteId aus Pocketbase lädt.
              * Sobald der eine Datensatz geladen wurde, soll die Funktion "insertExistingDataIntoForm()" aufgerufen werden.
              * */
-            fetch('https://pb-stma.toiwxr.easypanel.host/api/collections/Noten_Martin/records/' + existingNoteId, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    insertExistingDataIntoForm(data);
-                })
-                .catch((error) => {
-                    alert('Ein Fehler beim Laden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.');
-                    console.error('Error:', error);
-                });
+            
         }
 
         function insertExistingDataIntoForm(data) {
@@ -55,8 +41,7 @@
              * Im Feld "note" soll die Note eingetragen werden und im Feld "fach" das Fach.
              * */
             const form = document.getElementById('dataForm');
-            form.note.value = data.note;
-            form.fach.value = data.fach;
+            ///... 
         }
 
         function submitForm(event) {
@@ -84,21 +69,7 @@
                  * Hinweis: Bei der Url muss die ID des bestehenden Datensatzes am ende angegeben werden. -> /records/ID
                  * Hinweis: Um einen Datensatz zu aktualisieren, muss die Methode "PATCH" verwendet werden.
                  * */
-                fetch('https://pb-stma.toiwxr.easypanel.host/api/collections/Noten_Martin/records/' + existingNote.id, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: jsonBody
-                })
-                    .then(data => {
-                        alert('Daten erfolgreich aktualisiert');
-                        window.location.href = 'notenuebersicht.html';
-                    })
-                    .catch((error) => {
-                        alert('Ein Fehler beim senden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.')
-                        console.error('Error:', error);
-                    });
+    
             } else {
                 fetch('https://pb-stma.toiwxr.easypanel.host/api/collections/Noten_Martin/records', {
                     method: 'POST',
