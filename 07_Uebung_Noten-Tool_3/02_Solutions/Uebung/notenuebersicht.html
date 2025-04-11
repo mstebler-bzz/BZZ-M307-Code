@@ -62,7 +62,12 @@
                  * Aufgabe 1
                  * Ergänzen Sie den HTML Code, sodass neben jeder Note ein "bearbeiten" button angezeigt wird.
                  * */
-                innerHtml += `<tr><td>${item.note}</td><td>${item.fach}</td><td onclick="loeschen('${item.id}')">löschen</td><td onclick="bearbeiten('${item.id}')">bearbeiten</td></tr>`;
+                innerHtml += `
+                    <tr>
+                        <td>${item.note}</td><td>${item.fach}</td>
+                        <td onclick="loeschen('${item.id}')">löschen</td>
+                        <td onclick="bearbeiten('${item.id}')">bearbeiten</td>
+                    </tr>`;
             }
             tableBodyElement.innerHTML = innerHtml;
         }
