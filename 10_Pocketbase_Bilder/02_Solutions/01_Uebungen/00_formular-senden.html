@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formular zum Datenübermitteln</title>
+</head>
+
+<body>
+
+    <form id="dataForm" onsubmit="submitForm(event)">
+        <label for="title">Titel:</label>
+        <input type="text" name="title" id="title" required><br><br>
+
+        <label for="year">Jahr:</label>
+        <input type="number" name="year" id="year" min="1888" max="2025" required><br><br>
+
+        <label for="rating">Bewertung (1-5):</label>
+        <input type="number" name="rating" id="rating" min="1" max="5" required><br><br>
+
+        <label for="genre">Genre:</label>
+        <input type="text" name="genre" id="genre" required><br><br>
+
+        <label for="director">Regisseur:</label>
+        <input type="text" name="director" id="director" required><br><br>
+
+        <label for="isInCinema">Läuft im Kino:</label>
+        <input type="checkbox" name="isInCinema" id="isInCinema"><br><br>
+
+        <label for="singleImage">Hauptbild:</label>
+        <input type="file" name="singleImage" id="singleImage" accept="image/*"><br><br>
+
+        <label for="multipleImages">Weitere Bilder:</label>
+        <input type="file" name="multipleImages" id="multipleImages" accept="image/*" multiple><br><br>
+
+        <button type="submit">Film speichern</button>
+    </form>
+
+    <script>
+        function submitForm(event) {
+            event.preventDefault();
+
+            /**
+             * Mithilfe der createJsObjectFromHtmlForm() können Daten als JavaScript Object 
+             * aus dem Formular ausgelesen werden.
+             * */
+            const data = createJsObjectFromHtmlForm(event);
+
+            // kein JSON-Stringify nötig, da wir direkt FormData senden, weil es Bilder beinhaltet
+
+            // POST-Request an Pocketbase
+            fetch('https://pb-stma.toiwxr.easypanel.host/api/collections/movies/records', {
+                method: 'POST',
+                body: data
+                // wir brauchen auch keinen Header für JSON, da wir direkt FormData senden
+            })
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => {
+                    alert('Daten erfolgreich gesendet');
+                })
+                .catch((error) => {
+                    alert('Ein Fehler beim Senden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.')
+                    console.error('Error:', error);
+                });
+
+        }
+
+        /**
+             * Damit Bilder in pocketbase hochgeladen werden können, muss anstelle von JSON ein FormData-Objekt erstellt werden,
+             * da Bilder nicht direkt in JSON gesendet werden können (nur Text).
+             * Die Variable fromData enthält nun alle Informationen aus dem obigen Formular.
+             * */
+        function createJsObjectFromHtmlForm(event) {
+            const formData = new FormData(event.target);
+            for (let [key, value] of formData.entries()) {
+                if (value === 'on') {
+                    formData.set(key, 'true');
+                }
+            }
+            return formData;
+        }
+    </script>
+</body>
+
+</html>
