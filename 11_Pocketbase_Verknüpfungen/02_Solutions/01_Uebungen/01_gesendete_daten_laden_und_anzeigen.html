@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch Data from REST API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Data from REST API</h1>
+        <div id="dataList">
+            <p class="loading">Loading...</p>
+        </div>
+    </div>
+
+    <script>
+
+        // hier bleibt alles wie immer, normale fetch-Request um die Daten zu laden
+        function fetchData() {
+            fetch('https://pb-stma.toiwxr.easypanel.host/api/collections/movies/records?expand=writer,actors')
+                .then(response => {
+                    return response.json()
+                })
+                .then(data => {
+                    return displayData(data)
+                })
+                .catch((error) => {
+                    alert('Ein Fehler beim Senden der Daten ist aufgetreten. Bitte versuchen Sie es später erneut.');
+                    console.error('Error:', error);
+                });
+        }
+
+        function displayData(data) {
+            const items = data.items;
+            const dataList = document.getElementById('dataList');
+            dataList.innerHTML = '';
+
+            let innerHtml = '<ul>';
+            for (let item of items) {
+                // singleImage Feld, hier haben wir nur eine Bild-ID
+                let singleImageHtml = '';
+                if (item.singleImage) {
+                    singleImageHtml = `<img src="https://pb-stma.toiwxr.easypanel.host/api/files/movies/${item.id}/${item.singleImage}" width="100"><br/>`;
+                }
+
+                // multipleImages Feld, hier haben wir ein Array von Bild-IDs
+                let multipleImagesHtml = '';
+                if (item.multipleImages) {
+                    for (let image of item.multipleImages) {
+                        multipleImagesHtml += `<img src="https://pb-stma.toiwxr.easypanel.host/api/files/movies/${item.id}/${image}" width="100"><br/>`;
+                    }
+                }
+
+                // writer Feld, Zugriff über das expand-Property
+                let writerHtml = 'Nicht angegeben';
+                if (item.expand && item.expand.writer) {
+                    writerHtml = `${item.expand.writer.firstname} ${item.expand.writer.lastname}`;
+                }
+
+                // actors Feld, Zugriff über das expand-Property --> Array da mehrere Actors
+                let actorsHtml = 'Keine';
+                if (item.expand && item.expand.actors && item.expand.actors.length > 0) {
+                    actorsHtml = '';
+                    for (let actor of item.expand.actors) {
+                        if (actorsHtml !== '') {
+                            actorsHtml += ', ';
+                        }
+                        actorsHtml += `${actor.firstname} ${actor.lastname}`;
+                    }
+                }
+
+                // Handle isInCinema
+                let inCinemaText = 'Nein';
+                if (item.isInCinema) {
+                    inCinemaText = 'Ja';
+                }
+
+                innerHtml += `<li>
+                    Titel: ${item.title}<br/> 
+                    Jahr: ${item.year}<br/>
+                    Bewertung: ${item.rating}/5<br/> 
+                    Genre: ${item.genre}<br/>
+                    Regisseur: ${item.director}<br/>
+                    Im Kino: ${item.isInCinema ? 'Ja' : 'Nein'}<br/>
+                    Hauptbild:<br/>${singleImageHtml}
+                    Weitere Bilder:<br/>${multipleImagesHtml}
+                    Drehbuchautor: ${writerHtml}<br/>
+                    Schauspieler: ${actorsHtml}<br/>
+                </li>`;
+            }
+            innerHtml += '</ul>';
+            dataList.innerHTML = innerHtml;
+        }
+
+
+        fetchData();
+    </script>
+
+</body>
+
+</html>
