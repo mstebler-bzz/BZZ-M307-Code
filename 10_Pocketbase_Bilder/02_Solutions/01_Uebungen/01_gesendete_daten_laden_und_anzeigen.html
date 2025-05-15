@@ -85,9 +85,9 @@
                 // singleImage Feld, hier haben wir nur eine Bild-ID
                 let singleImageHtml = '';
                 if (item.singleImage) {
-                    // die Bild ID setzt sich immer gleich zusammen:
+                    // die Bild URL setzt sich immer gleich zusammen:
                     // Ihre Pocketbase URL
-                    // api/files/COLLECTION-NAME/
+                    // api/files/COLLECTION-NAME/item-ID/Bild-ID
                     // item-ID --> ID des aktuellen Eintrags
                     // Bild-ID --> Bild-ID des aktuellen Eintrags
                     singleImageHtml = `<img src="https://pb-stma.toiwxr.easypanel.host/api/files/movies/${item.id}/${item.singleImage}" width="100"><br/>`;
